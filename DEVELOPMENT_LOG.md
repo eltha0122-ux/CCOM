@@ -174,6 +174,38 @@ Weebly 平台級的 Google Analytics（`UA-7870337-1`，搭配 `_setDomainName: 
 
 此修正使平板版面與原站不同（原站同樣是擠的），為使用者明確選擇「比原站好看」的結果。
 
+### 自訂網域 fanfanyeh.net 的查證結果
+
+先前「暫緩處理決策」列為待處理的「正式網域」一項，已完成查證（僅公開 WHOIS 與 DNS 查詢）：
+
+| 項目 | 實際資料 |
+|---|---|
+| 註冊人 | 網站擁有者本人，聯絡信箱 `eltha0122@gmail.com` |
+| 註冊商 | **Register.com**，非 Weebly |
+| 到期日 | **2027-03-19** |
+| DNS 代管 | `dns1.register.com`／`dns2.register.com` |
+| 轉移鎖定 | `clientTransferProhibited`（預設值，不影響改 DNS） |
+
+**結論：網域與 Weebly 訂閱完全獨立**，停掉 Weebly 空間不影響網域，
+只需登入 Register.com 改 A 記錄即可指向 GitHub Pages，無須辦理網域移轉。
+
+目前的 DNS 記錄與注意事項：
+
+- `MX` 五筆指向 Google（`aspmx.l.google.com` 等標準設定）。
+  **這代表信會被送到 Google，但不代表該處有使用中的信箱**——
+  站上（含仍在線的原 Weebly 站）出現的信箱全部是 `eltha0122@gmail.com` 共 89 處，
+  查無任何 `@fanfanyeh.net` 位址。移轉前需向網站擁有者確認，確認前 MX 一律保留。
+- `A` 根網域與 `www` 均指向 `199.34.228.133`（反查為 `pages-custom-38.weebly.com`），為本次要修改的對象。
+- **存在萬用字元 `*` A 記錄**（以隨機字串 `zzz-random-test-9x7` 測試證實），同樣指向 Weebly。
+  Weebly 停用後該 IP 可能改服務他人，建議刪除或一併改指 GitHub。
+- `mail` 子網域指向 `216.21.224.199`（IP 歸屬查得為 Register.com），
+  推測為 2017 年註冊時預設帶入的殘留，不影響收信。
+- **無 SPF、無 DKIM、無 DMARC**（DKIM 試過 6 個常見 selector 皆無）。
+  代表該網域目前可被任意冒名寄信，建議依信箱是否使用補上對應記錄。
+
+以上完整的操作清單、確認方法與建議記錄值，已寫入交接包的 `01-移轉步驟.md` 第 7 步。
+本次查證未變更任何 DNS 設定，也未更動網站內容。
+
 ### 注意事項
 
 - `work/repair_static_site.py` 是依原站重新產生站台的腳本，**再次執行會把 Weebly 外部相依裝回去**，

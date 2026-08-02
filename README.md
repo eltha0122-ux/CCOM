@@ -78,6 +78,15 @@ git diff --check
 - GitHub 儲存庫：<https://github.com/jesuswaytaipeisrv/yeh>
 - Sitemap：<https://jesuswaytaipeisrv.github.io/yeh/sitemap.xml>
 
+## 自訂網域
+
+`fanfanyeh.net` 由網站擁有者本人註冊於 **Register.com**（非 Weebly），**2027-03-19 到期**，
+與 Weebly 訂閱互相獨立，只需改 A 記錄即可指向 GitHub Pages。
+
+改 DNS 時注意：**五筆指向 Google 的 MX 記錄不可刪除**（未確認信箱是否使用前一律保留），
+另有指向 Weebly 的萬用字元 `*` A 記錄建議一併處理。完整說明見 `DEVELOPMENT_LOG.md`
+2026-08-02 的「自訂網域 fanfanyeh.net 的查證結果」。
+
 ## 費用
 
-本專案使用公開 GitHub 儲存庫與 GitHub Pages，靜態網站託管費用為免費。自訂網域若沿用既有網域，另需負擔原網域註冊／續約費用。
+本專案使用公開 GitHub 儲存庫與 GitHub Pages，靜態網站託管費用為免費。自訂網域若沿用既有網域，另需負擔原網域註冊／續約費用（Register.com 的 .net 續約價約每年 US$30–40）。
