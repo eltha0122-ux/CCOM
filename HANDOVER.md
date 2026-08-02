@@ -11,7 +11,7 @@
 |---|---|
 | 站台內容 | 44 個 HTML、107 張圖，已完全脫離 Weebly |
 | 新家 | `https://github.com/eltha0122-ux/CCOM`（葉如凡本人帳號，public） |
-| 新網址 | `https://eltha0122-ux.github.io/CCOM/`（站內絕對網址已全部換成這個） |
+| 新網址 | **`https://eltha0122-ux.github.io/CCOM/` 已上線**（2026-08-02 部署成功並驗證） |
 | 原建置位置 | `https://github.com/jesuswaytaipeisrv/yeh`（保留為備份，不再是正式站） |
 | 網域 | `fanfanyeh.net` 仍指向 Weebly，**尚未變更** |
 | 離線備份 | `yeh-網站移轉包.zip`（232 檔，與 repo 內容相同） |
@@ -25,13 +25,13 @@
       jQuery 與字型改為自帶（MIT／OFL 授權）。
 - [x] **2. 換成新網址**：`python3 tools/set_site_url.py https://eltha0122-ux.github.io/CCOM/`
       已執行，47 個檔案共 341 處絕對網址（canonical、og:url、sitemap、robots、RSS）皆已更新。
-- [ ] **3. 推上她的 repo 並上線**
+- [x] **3. 推上她的 repo 並上線** — 已完成，站台在 `https://eltha0122-ux.github.io/CCOM/`
   - [x] 她到 `CCOM` repo 的 Settings → Collaborators 邀請協助者帳號（`jesuswaytaipeisrv`）
   - [x] 推送 `main` 分支（完整專案，含 `docs/`、`tools/`、`work/`、`.github/`）
-  - [ ] 她到 **Settings → Pages → Build and deployment → Source 選 `GitHub Actions`**
-  - [ ] 到 Actions 頁面把 `Deploy GitHub Pages` 重跑一次（Re-run jobs），
-        或由協助者推一個 commit 觸發
-  - [ ] 確認 `https://eltha0122-ux.github.io/CCOM/` 開得起來
+  - [x] 她到 **Settings → Pages → Build and deployment → Source 選 `GitHub Actions`**
+  - [x] 重跑 workflow → 部署成功（2026-08-02）
+  - [x] 線上驗證通過：25 頁全開、201 張圖無破圖、18 個轉址頁全部正確、
+        390／768／1280px 三種寬度皆無水平溢出
 
   > **啟用 Pages 只有 repo 擁有者能做，無法代勞。** 實測：collaborator 的 push 權限呼叫
   > Pages API 回 `404`；在 workflow 加 `enablement: true` 讓它自行啟用也失敗

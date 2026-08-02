@@ -264,3 +264,26 @@ repo 根目錄確認有 `.github`、`docs`、`tools`、`work`、`README.md`、`H
 
 待她在 Settings → Pages 把 Source 設為 GitHub Actions 後，重跑一次 workflow 即可部署。
 在那之前每次推送的 Actions 都會在 `Configure Pages` 失敗，屬預期現象。
+
+### 2026-08-02：eltha0122-ux/CCOM 部署成功並完成線上驗證
+
+擁有者已將 Settings → Pages 的 Source 設為 GitHub Actions（API 確認 `build_type: workflow`），
+重跑後 workflow run `30738234071` 結果 **success**，站台上線於
+`https://eltha0122-ux.github.io/CCOM/`。
+
+線上驗證（於實際瀏覽器載入正式網址後，用同源 iframe 逐頁量測）：
+
+| 項目 | 結果 |
+|---|---|
+| sitemap 全 25 頁載入 | 全部成功，無空白頁 |
+| 圖片 | 201 張，`naturalWidth===0` 破圖 **0** |
+| 資源請求 | 同網域資源 HTTP >= 400 者 **0**（含 CSS、字型、jQuery） |
+| canonical | 25 頁全部指向新網址，**0 筆錯誤** |
+| 對外連線 | 僅 `www.facebook.com`／`connect.facebook.net`／`platform.twitter.com`／`syndication.twitter.com`，即分享按鈕；**無 Google Analytics** |
+| 18 個舊文章轉址頁 | 逐一取出 refresh 目標並 fetch，**全部 200 且指向新站文章頁**，異常 0 |
+| RWD 390／768／1280px | 首頁、文章頁、CCOS 頁共 9 組，`scrollWidth` 皆未超出視窗寬度，無水平溢出 |
+
+`docs/files/main_style.css` 實際檔名為 `main_style.css%3F1782325194.css`（wget 抓站時把查詢字串帶進檔名），
+直接猜 `files/main_style.css` 會得到 404，這是檔名問題不是缺檔，實際路徑回應 200。
+
+**尚未驗證**：107 張圖未逐張目視比對原站、文章內文未逐段比對——這部分要由網站擁有者在第 4 步完成。
