@@ -245,3 +245,22 @@ Weebly 平台級的 Google Analytics（`UA-7870337-1`，搭配 `_setDomainName: 
 - 推上 `eltha0122-ux/CCOM`：等她把 `jesuswaytaipeisrv` 加為 collaborator。
 - Settings → Pages 的 Source 設為 GitHub Actions：**只有 repo 擁有者能做**，需她本人操作。
 - 逐頁對照確認、改 DNS、停 Weebly：見 `HANDOVER.md`。
+
+### 推上 eltha0122-ux/CCOM 的結果
+
+collaborator 邀請（write）已接受，`main` 分支完整推送成功，
+repo 根目錄確認有 `.github`、`docs`、`tools`、`work`、`README.md`、`HANDOVER.md`、`DEVELOPMENT_LOG.md`。
+
+**但 Actions 部署失敗，原因是新 repo 的 Pages 尚未啟用**：
+
+1. 第一次執行：`Configure Pages` 失敗，`Get Pages site failed ... Not Found`。
+2. 依錯誤訊息提示在 workflow 加 `enablement: true` 讓它自行啟用 → 仍失敗，
+   `Create Pages site failed. Error: Resource not accessible by integration`。
+   **建立 Pages 站台需要 admin 權限，workflow 的 `GITHUB_TOKEN` 與 collaborator 都沒有。**
+3. 直接以 collaborator 身分呼叫 `POST /repos/eltha0122-ux/CCOM/pages` → 回 `404`，同樣是權限不足。
+
+結論：**啟用 Pages 只有 repo 擁有者本人能做，無法代勞。** 既然 `enablement: true` 在此情境無效，
+已 revert（commit `2190eb8`），workflow 維持原本在 `jesuswaytaipeisrv/yeh` 驗證過可用的設定。
+
+待她在 Settings → Pages 把 Source 設為 GitHub Actions 後，重跑一次 workflow 即可部署。
+在那之前每次推送的 Actions 都會在 `Configure Pages` 失敗，屬預期現象。

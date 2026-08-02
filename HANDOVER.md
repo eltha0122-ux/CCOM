@@ -26,10 +26,17 @@
 - [x] **2. 換成新網址**：`python3 tools/set_site_url.py https://eltha0122-ux.github.io/CCOM/`
       已執行，47 個檔案共 341 處絕對網址（canonical、og:url、sitemap、robots、RSS）皆已更新。
 - [ ] **3. 推上她的 repo 並上線**
-  - 她到 `CCOM` repo 的 Settings → Collaborators 邀請協助者帳號（`jesuswaytaipeisrv`）
-  - 推送 `main` 分支
-  - 她到 Settings → Pages 把 **Source 設為 GitHub Actions**（此步驟只有 repo 擁有者能做）
-  - 等 Actions 跑完，確認 `https://eltha0122-ux.github.io/CCOM/` 開得起來
+  - [x] 她到 `CCOM` repo 的 Settings → Collaborators 邀請協助者帳號（`jesuswaytaipeisrv`）
+  - [x] 推送 `main` 分支（完整專案，含 `docs/`、`tools/`、`work/`、`.github/`）
+  - [ ] 她到 **Settings → Pages → Build and deployment → Source 選 `GitHub Actions`**
+  - [ ] 到 Actions 頁面把 `Deploy GitHub Pages` 重跑一次（Re-run jobs），
+        或由協助者推一個 commit 觸發
+  - [ ] 確認 `https://eltha0122-ux.github.io/CCOM/` 開得起來
+
+  > **啟用 Pages 只有 repo 擁有者能做，無法代勞。** 實測：collaborator 的 push 權限呼叫
+  > Pages API 回 `404`；在 workflow 加 `enablement: true` 讓它自行啟用也失敗
+  > （`Resource not accessible by integration`，建立 Pages 站台需要 admin 權限）。
+  > 因此 Pages 未啟用前，每次推送的 Actions 都會在 `Configure Pages` 這步失敗，屬預期現象。
 - [ ] **4. 請她逐頁對照確認**（不可逆關卡）
   - 開兩個視窗，左邊原站 `www.fanfanyeh.net`、右邊新站，逐頁比對有無漏內容
   - 重點：26 個主要頁面、107 張圖、18 個舊文章轉址頁
