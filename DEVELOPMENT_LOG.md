@@ -287,3 +287,36 @@ repo 根目錄確認有 `.github`、`docs`、`tools`、`work`、`README.md`、`H
 直接猜 `files/main_style.css` 會得到 404，這是檔名問題不是缺檔，實際路徑回應 200。
 
 **尚未驗證**：107 張圖未逐張目視比對原站、文章內文未逐段比對——這部分要由網站擁有者在第 4 步完成。
+
+### 2026-08-02：預先備妥自訂網域的切換（`custom-domain` 分支）
+
+Weebly 預計 2026-08-31 停用，故先把換網域的 commit 做好待命，避免當天趕工。
+
+**分支 `custom-domain`**（commit `a95955c`，已推 `yeh` 與 `origin`，**刻意不合併 `main`**）：
+
+- `python3 tools/set_site_url.py https://www.fanfanyeh.net/` → 47 檔 341 處絕對網址改指自訂網域
+- 腳本一併產生 `docs/CNAME`（內容 `www.fanfanyeh.net`）
+
+**順手修掉一個檢查腳本的誤判**：`check_static_site.py` 原本把任何含 `fanfanyeh.net` 的
+og:image／og:url 都判為「仍依賴 Weebly 舊站」。在舊站還是 Weebly 時這是對的，
+但改用自訂網域後該網域即為本站，一換就噴出 **102 筆假警報**。
+改為依 `--base-url` 的 host 判斷：只有當基準網址不屬於 `fanfanyeh.net` 時才視為殘留。
+
+| 驗證 | 結果 |
+|---|---|
+| `check_static_site.py docs`（預設已改為自訂網域） | 通過：26 主要頁、18 轉址頁、25 sitemap 網址 |
+| 同上但 `--base-url` 給 CCOM 網址 | 仍正確報出 og 殘留 → 證明修正後沒有變成永遠通過 |
+| 本機起站 + 瀏覽器同源 iframe 掃 sitemap 全 25 頁 | 201 張圖破圖 0、同網域資源無 4xx、canonical 25 頁全指向自訂網域 |
+
+**⚠️ DNS 生效前不可合併進 `main`。** 部署後 `eltha0122-ux.github.io/CCOM` 會轉址到自訂網域，
+DNS 未指向 GitHub Pages 時新舊網址會同時無法連線。
+
+改 DNS 當天順序：Register.com 改 A 記錄 → GitHub Settings → Pages 填入 `www.fanfanyeh.net`
+→ 合併 `custom-domain` 進 `main` → 等 Let's Encrypt 憑證發出後勾選 Enforce HTTPS。
+
+### 收尾檢查
+
+- 測試用的 8811／8812 埠伺服器皆已關閉，無殘留背景程序。
+- 敏感字串掃描（token、私鑰、api key 樣式）無命中。
+- 工作目錄仍有 18 個未追蹤檔案，是這個 Codex 工作目錄原本就混入的 Next.js 樣板
+  （`app/`、`drizzle/`、`package.json` 等），與本站無關、未曾納入版控，故保留不動。
