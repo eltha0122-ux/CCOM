@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://jesuswaytaipeisrv.github.io/yeh/sitemap.xml
+Sitemap: https://eltha0122-ux.github.io/CCOM/sitemap.xml

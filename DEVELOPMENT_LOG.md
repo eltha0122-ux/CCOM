@@ -212,3 +212,36 @@ Weebly 平台級的 Google Analytics（`UA-7870337-1`，搭配 `_setDomainName: 
   且會覆蓋本次的本地化成果。若日後需重跑，必須先評估如何保留 `docs/files/fonts/`、
   `docs/files/vendor/` 與 `static-overrides.css` 的修改。
 - 同內容的交接包（含移轉步驟、維護手冊、已知限制三份文件）另行提供給葉如凡本人。
+
+## 2026-08-02（下午）：切換為葉如凡本人的 repo
+
+網站擁有者已自行建立 `https://github.com/eltha0122-ux/CCOM`（public、預設分支 `main`、
+建立時為空、Pages 未啟用）。本次把專案改為以該 repo 為正式家。
+
+### 變更
+
+- `tools/set_site_url.py https://eltha0122-ux.github.io/CCOM/`：
+  47 個檔案共 341 處絕對網址（canonical、og:url、og:image、sitemap、robots、RSS feed）改為新網址。
+- `work/check_static_site.py`：原本寫死 `BASE_URL = jesuswaytaipeisrv.github.io/yeh/`，
+  換網址後直接失敗。改為 `--base-url` 參數（預設值為新網址），
+  `local_target()` 內寫死的 `/yeh/` 前綴也改為由 base-url 的路徑推導。
+- `README.md`、新增 `HANDOVER.md`（移交進度、DNS 記錄值、費用、陷阱）。
+
+### 驗證
+
+| 項目 | 方法 | 結果 |
+|---|---|---|
+| 靜態檢查 | `python3 work/check_static_site.py docs` | 通過（26 主要頁、18 轉址頁、25 sitemap 網址） |
+| 參數確實生效 | 同上加 `--base-url` 舊網址 | 如預期失敗，證明不是寫死通過 |
+| 根相對路徑 | `grep -rIo '["'\''(]/yeh/' docs` | 0 筆，站台用相對路徑，換 repo 名不會壞 |
+| 舊網域殘留 | `grep -rIl jesuswaytaipeisrv docs` | 0 筆 |
+| 實際瀏覽器 | `python3 -m http.server 8811 --directory docs`，於頁內用同源 iframe 逐頁載入 sitemap 全部 25 頁 | 25 頁、201 張圖，**破圖 0**、canonical 全部指向新網址、**無 Google Analytics** |
+| 對外連線 | 同上蒐集 `performance.getEntriesByType('resource')` 的非本機 host | 只有 `www.facebook.com`／`connect.facebook.net`／`platform.twitter.com`，即文章頁分享按鈕，與 README 記載相符 |
+
+測試用的 8811 埠伺服器已於工作結束時關閉。
+
+### 尚未完成（需對方帳號權限）
+
+- 推上 `eltha0122-ux/CCOM`：等她把 `jesuswaytaipeisrv` 加為 collaborator。
+- Settings → Pages 的 Source 設為 GitHub Actions：**只有 repo 擁有者能做**，需她本人操作。
+- 逐頁對照確認、改 DNS、停 Weebly：見 `HANDOVER.md`。
