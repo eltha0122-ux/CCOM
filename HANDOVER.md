@@ -82,13 +82,24 @@ Enforce HTTPS，通常幾十分鐘、偶爾要等上一天。若當天才改而�
 另：該網域目前**沒有 SPF／DKIM／DMARC**，代表任何人都能冒用 `@fanfanyeh.net` 寄信。
 若確認信箱有在使用，建議補上；若確認沒在使用，建議加一筆 `v=spf1 -all` 擋掉冒名寄信。
 
-DNS 改完後，回 GitHub repo 的 Settings → Pages 填入自訂網域，並重跑一次：
+**換網址的 commit 已經先做好了，放在 `custom-domain` 分支**（commit `a95955c`，兩邊 repo 都有）：
+341 處絕對網址已改指 `https://www.fanfanyeh.net/`、`docs/CNAME` 已產生，靜態檢查與瀏覽器逐頁掃描皆通過。
+
+⚠️ **DNS 生效前不要合併進 `main`。** 這個 commit 一旦部署，
+`eltha0122-ux.github.io/CCOM` 就會轉址到自訂網域；DNS 還沒指過來的話兩邊都連不上。
+
+改 DNS 當天的順序：
+
+1. Register.com 改好 A 記錄（見上表）
+2. GitHub Settings → Pages 填入自訂網域 `www.fanfanyeh.net`
+3. 合併 `custom-domain` 進 `main` 並推送 → Actions 自動部署
+4. 等 GitHub 發完 Let's Encrypt 憑證後，勾選 **Enforce HTTPS**
+
+事後若還要再換網址，一律用腳本、不要手改：
 
 ```bash
-python3 tools/set_site_url.py https://www.fanfanyeh.net/
+python3 tools/set_site_url.py https://新網址
 ```
-
-（腳本會一併產生 `docs/CNAME`，commit 推上去即可。）
 
 ## 費用
 
