@@ -122,6 +122,27 @@
 18 個轉址頁僅確認轉址網址正確，未逐一點擊。頁面高度與修改前有 1% 內差異
 （例如首頁 6954 → 6911 px），來自字型檔來源不同造成的字寬差異，屬正常範圍。
 
+### 補正：移除 Weebly 平台級 Google Analytics
+
+推送後以瀏覽器檢查線上站台的實際網路請求時，發現仍有一支追蹤程式在運作：
+Weebly 平台級的 Google Analytics（`UA-7870337-1`，搭配 `_setDomainName: 'none'`）。
+
+前一輪清理是以「移除含 `editmysite` 字樣的 script 區塊」為條件，而這段程式碼直接內嵌於 HTML、
+且其網址是以字串拼接組出（`'https:' == protocol ? 'https://ssl' : 'http://www'` + `'.google-analytics.com/ga.js'`），
+因此既未被字串比對掃到，也未出現在靜態的主機清單中，僅能由實際執行後的網路請求發現。
+
+已自 26 個頁面移除該 `<script>` 區塊。移除理由：該追蹤屬於 Weebly 平台而非網站擁有者，
+葉如凡無從存取其資料，卻仍持續將訪客資訊送往該帳號；且 Universal Analytics 已停止處理資料，
+留著只是無效請求。
+
+移除後複驗：`performance.getEntriesByType('resource')` 顯示頁面僅載入自身網域資源，
+以及臉書／推特分享按鈕的元件；`ssl.google-analytics.com` 已不再出現。
+破圖 0、console 錯誤 0、側欄與社群圖示列寬維持不變。
+
+**目前僅存的第三方連線**：文章頁分享按鈕的 `platform.twitter.com`、`syndication.twitter.com`、
+`connect.facebook.net`、`www.facebook.com`。這些屬於功能性元件而非站方植入的分析追蹤，
+若要達成零第三方連線，需改為純連結式的分享按鈕。
+
 ### 注意事項
 
 - `work/repair_static_site.py` 是依原站重新產生站台的腳本，**再次執行會把 Weebly 外部相依裝回去**，
