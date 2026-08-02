@@ -87,7 +87,8 @@ python3 tools/set_site_url.py https://www.fanfanyeh.net/
 - 原本的 Weebly 聯絡表單已改為 `mailto:` 連結，不再蒐集訪客資料。
 - 文章頁的臉書／推特分享按鈕仍會載入第三方腳本（`connect.facebook.net`、`platform.twitter.com`），
   是站上唯一的對外連線；若不希望訪客被追蹤，可以移除這兩顆按鈕。
-- 尚未逐一驗證的部分：107 張圖未逐張目視、18 個轉址頁未逐一點擊——這正是第 4 步要她確認的原因。
+- 18 個轉址頁已自動驗證（全部 200 且指向新站文章頁）。**尚未驗證的是「內容有沒有漏」**：
+  107 張圖未逐張與原站目視比對、文章內文未逐段比對——這正是第 4 步要她確認的原因。
 - ⚠️ **`work/repair_static_site.py` 不要再執行**。它會依原站重新產生站台，
   執行後會把 Weebly 的外部相依裝回去，並覆蓋 `docs/files/fonts/`、`docs/files/vendor/`
   與 `static-overrides.css` 的本地化成果。
