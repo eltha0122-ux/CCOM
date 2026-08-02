@@ -57,6 +57,7 @@
 ### 已知相依項目
 
 - 文章投影片、投影片圖片與留言輸入功能已不再依賴 Weebly；版型的共用字型、CSS 與部分 JavaScript 仍由 Weebly 共用 CDN 載入，後續可再評估本地化與第三方資源授權。
+  - **2026-08-02 已解除**：Weebly 共用 CDN 相依全部移除，詳見下方 2026-08-02 紀錄。
 - Facebook、LinkedIn、Instagram 等外部連結需連線至各自平台。
 
 ### 暫緩處理決策
@@ -64,4 +65,66 @@
 - 本站是使用者協助朋友建立的臨時 GitHub Pages，後續預計移回朋友的正式網站空間，不以目前 GitHub Pages 網址作為長期正式站。
 - commit `8338001` 已補齊文章圖片與舊網址、移除留言輸入 iframe，並修正分享連結、Canonical／Open Graph、Sitemap 及 robots.txt；這些項目不再列為待修。
 - 目前仍保留 Weebly 共用 CDN、分析／追蹤程式與舊版 jQuery 等版型相依。使用者決定臨時站階段不再投入全面本地化或長期 SEO／主機最佳化，以免正式搬遷時重做。
+  - **2026-08-02 決策變更**：因確定移轉給葉如凡本人，已完成全面本地化並移除第三方追蹤，詳見 2026-08-02 紀錄。
 - 正式搬遷前應重新檢查第三方追蹤、外部資源授權與自託管、正式網域、隱私說明、404 頁面及正式主機的安全設定。
+  - 其中「第三方追蹤」「外部資源授權與自託管」已於 2026-08-02 處理完成；正式網域、隱私說明、404 頁面仍待處理。
+
+## 2026-08-02
+
+### 移除 Weebly 外部相依，改為完全自託管
+
+移轉給葉如凡本人前，處理先前列為「已知相依項目」的版型外部資源。原本站台仍即時向
+`cdn2.editmysite.com`／`cdn11.editmysite.com` 載入 26 個檔案（CSS、字型、jQuery、輪播、圖示字型）。
+
+處置方式依授權性質分層，而非一律下載自架：
+
+- **jQuery 1.8.3**：改用官方 `code.jquery.com` 版本，置於 `docs/files/vendor/`。MIT 授權，自架合法。
+- **6 套字型**（Lora、Open Sans、Crimson Text、Josefin Sans、Playfair Display、Quattrocento）：
+  改用 Google Fonts 官方 woff2，取 latin 與 latin-ext 子集共 52 檔，置於 `docs/files/fonts/`。
+  SIL Open Font License，明文允許自架。
+- **Weebly 專有資源**（`sites.css`、`main.js`、`slideshow`、`social-icons.css`、
+  `site_membership.css`、wIcons／wSocial 圖示字型）：**整批移除，不複製也不自架**，避開服務條款與著作權的灰色地帶。
+- **Weebly 追蹤與元件程式**（Snowplow 分析、連結追蹤、marketplace platform elements）：一併移除。
+  其中 membership／customer-accounts 相關資源經檢查 `wsite-member` 於全站出現 0 次，確認為未使用。
+- **社群圖示**：原以 wSocial 圖示字型顯示，改為內嵌 data-URI SVG，規則寫於 `docs/files/static-overrides.css`。
+- **fancybox 燈箱**：實測原版點擊圖片亦無反應，確認為失效功能，移除無損失。
+
+移除 Weebly 樣式後版面幾乎不變，因 `docs/files/main_style.css`（版型自有樣式）本即承擔主要視覺。
+僅需於 `static-overrides.css` 補兩條規則，均已加註說明：
+
+- `.blog-sidebar .column-blog { float: right }`：原由 `sites.css` 提供，缺少會使側欄整欄貼左。
+- 社群圖示 `margin-right: 5px`：使整列總寬維持 110px，與原圖示字型版本一致。
+
+另於 26 個頁面標頭加入 `var _W = window._W || {}` 相容宣告。該全域物件原由 `main.js` 定義，
+移除後頁面內殘留的 Weebly 設定片段會拋 `ReferenceError`。
+
+順帶修正 `docs/2/feed`：30 個文章連結為 Weebly 的無副檔名格式（GitHub Pages 不支援，會 404），
+已補上 `.html`；feed 內指向舊 Weebly 站的圖片改指回本站。`tools/set_site_url.py` 的處理範圍
+一併納入 `docs/2/feed`。
+
+### 測試結果
+
+驗證方法：將「本次修改後」與「修改前」兩份站台同時以 `python3 -m http.server` 架於不同 port，
+於頁面內以同源 iframe 逐頁載入並量測，避免人工截圖比對的誤差。
+
+- **26 個內容頁面全站版面比對通過**：文章側欄 `240px @ 982`、內文欄 `821px @ 43`、
+  社群圖示列 `110px`，三項與修改前完全一致。
+- **破圖檢查通過**：26 頁共 200 餘個 `<img>`，以 `naturalWidth` 判定，破圖 0 張。
+- **瀏覽器 console 錯誤 0 個**。
+- **手機版 390px 通過**：首頁、關於我、文章列表、文章內頁、洽詢頁均無橫向溢出；
+  實際點擊確認漢堡選單可展開且六個選單項目完整。
+- **本地資源完整性通過**：44 個 HTML 的全部相對路徑引用，程式驗證檔案皆存在，缺檔 0。
+- **`work/check_static_site.py` 通過**：`primary_pages=26, redirects=18, sitemap_urls=25`。
+- **`bash -n work/prepare-static-site.sh`、`git diff --check` 通過**。
+- 全站可發出網路請求的 `editmysite` 引用為 **0 處**。
+
+**未驗證項目**：768px 平板寬度未測；107 張圖片未逐張目視（僅程式化破圖檢查）；
+18 個轉址頁僅確認轉址網址正確，未逐一點擊。頁面高度與修改前有 1% 內差異
+（例如首頁 6954 → 6911 px），來自字型檔來源不同造成的字寬差異，屬正常範圍。
+
+### 注意事項
+
+- `work/repair_static_site.py` 是依原站重新產生站台的腳本，**再次執行會把 Weebly 外部相依裝回去**，
+  且會覆蓋本次的本地化成果。若日後需重跑，必須先評估如何保留 `docs/files/fonts/`、
+  `docs/files/vendor/` 與 `static-overrides.css` 的修改。
+- 同內容的交接包（含移轉步驟、維護手冊、已知限制三份文件）另行提供給葉如凡本人。
