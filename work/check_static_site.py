@@ -10,7 +10,7 @@ from urllib.parse import unquote, urlparse
 
 
 # 站台目前的正式網址。換站或換網域時用 --base-url 覆蓋，或直接改這行。
-DEFAULT_BASE_URL = "https://eltha0122-ux.github.io/CCOM/"
+DEFAULT_BASE_URL = "https://www.fanfanyeh.net/"
 ATTRIBUTE_RE = re.compile(r'(?:src|href)=["\']([^"\']+)', re.IGNORECASE)
 
 
@@ -46,6 +46,12 @@ def main() -> int:
     docs = Path(args.docs).resolve()
     base_url = args.base_url if args.base_url.endswith("/") else args.base_url + "/"
     site_prefix = urlparse(base_url).path
+    # og:image／og:url 不該再指向 Weebly。`fanfanyeh.net` 原本是 Weebly 舊站，
+    # 但改用自訂網域後它就是本站，這時不能再當成舊站。
+    base_host = urlparse(base_url).hostname or ""
+    stale_hosts = ["editmysite.com"]
+    if not base_host.endswith("fanfanyeh.net"):
+        stale_hosts.append("fanfanyeh.net")
     errors: list[str] = []
     primary_pages = sorted(
         page
@@ -79,7 +85,7 @@ def main() -> int:
             for tag in re.findall(
                 rf'<meta\s+property=["\']{re.escape(meta_name)}["\'][^>]+>', source, re.I
             ):
-                if "fanfanyeh.net" in tag or "editmysite.com" in tag:
+                if any(host in tag for host in stale_hosts):
                     errors.append(f"{relative}: {meta_name} 仍依賴舊站或 Weebly")
 
         for value in ATTRIBUTE_RE.findall(source):
