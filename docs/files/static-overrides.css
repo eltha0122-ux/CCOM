@@ -87,3 +87,37 @@
 .blog-sidebar .column-blog {
   float: right;
 }
+
+/* ===================================================================
+   平板寬度的文章版面
+   文章頁用 #blogTable 這個 table 排成「內文 + 側欄」兩欄，原版型只在更窄的
+   寬度才切成單欄，導致 768px 左右側欄被壓到剩約 148px，內文擠成一行三四個字。
+   實測側欄內容寬度隨視窗遞減：1200px→231px、1100px→210px、901px→176px（桌面基準 240px），
+   因此斷點取 1150px——在此之下堆疊到內文下方，1280px 以上的桌面版面完全不受影響。
+   =================================================================== */
+@media (max-width: 1150px) {
+  #blogTable td {
+    clear: both;
+    display: block;
+    float: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+  }
+
+  /* 主題有 `#blogTable .blog-sidebar { width: 30% }`，優先權高於單純的元素選擇器，
+     必須用 td.blog-sidebar（id + class + 元素）才蓋得過去。 */
+  #blogTable td.blog-sidebar {
+    padding-top: 30px;
+    width: 100%;
+  }
+
+  /* 桌面版靠右浮動的側欄，堆疊後改為滿寬。
+     主題原有 `#blogTable .blog-sidebar .column-blog { width: 70%; max-width: 240px }`，
+     那個上限是為了窄側欄而設，堆疊後不再需要，一併解除，否則內容只佔左側一小塊。 */
+  #blogTable .blog-sidebar .column-blog {
+    float: none;
+    max-width: none;
+    width: 100%;
+  }
+}
