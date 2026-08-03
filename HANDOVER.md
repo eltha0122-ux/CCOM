@@ -110,6 +110,17 @@ Enforce HTTPS，通常幾十分鐘、偶爾要等上一天。若當天才改而�
 3. 合併 `custom-domain` 進 `main` 並推送 → Actions 自動部署
 4. 等 GitHub 發完 Let's Encrypt 憑證後，勾選 **Enforce HTTPS**
 
+> 第 3 步會有**兩個預期中的衝突**：`work/repair_static_site.py` 與 `work/prepare-static-site.sh`。
+> 兩個分支各自把同一行的預設網址改成自己的正式網址（`main` 是 CCOM、`custom-domain` 是自訂網域），
+> **一律取 `custom-domain` 側的值**：
+>
+> ```bash
+> git checkout --theirs work/repair_static_site.py work/prepare-static-site.sh
+> git add work/repair_static_site.py work/prepare-static-site.sh
+> ```
+>
+> 只有這兩個檔案會衝突（已用 `git merge-tree` 試算確認），其餘檔案自動合併。
+
 事後若還要再換網址，一律用腳本、不要手改：
 
 ```bash
