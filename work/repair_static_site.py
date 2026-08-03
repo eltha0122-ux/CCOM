@@ -12,7 +12,7 @@ from pathlib import Path
 from urllib.parse import quote, urlparse
 
 
-DEFAULT_BASE_URL = "https://jesuswaytaipeisrv.github.io/yeh/"
+DEFAULT_BASE_URL = "https://www.fanfanyeh.net/"
 SOURCE_ORIGIN = "https://www.fanfanyeh.net"
 
 SLIDESHOW_BLOCK_RE = re.compile(
