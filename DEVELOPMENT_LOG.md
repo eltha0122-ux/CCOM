@@ -377,8 +377,15 @@ curl -s -X PATCH -H "Authorization: Bearer $TOKEN" \
 
 `main` 與 `custom-domain` 的 upstream 皆已改指新的 `origin`。
 
-### 尚未處理（已知，非本次範圍）
+### 一併清掉失效的舊網址
 
-`work/repair_static_site.py` 的 `DEFAULT_BASE_URL` 與 `work/prepare-static-site.sh` 內仍寫死
-`https://jesuswaytaipeisrv.github.io/yeh/`，該網址現已失效。兩者本來就標注「不要再執行」
-（會把 Weebly 相依裝回去），故本次未改動；若日後要重跑務必以 `--base-url` 指定正確網址。
+`work/repair_static_site.py` 的 `DEFAULT_BASE_URL` 與 `work/prepare-static-site.sh` 傳入的
+`--base-url` 都還寫死 `https://jesuswaytaipeisrv.github.io/yeh/`，該網址已隨 Pages 停用而失效，
+不改的話日後誤用預設值會產生指向死站的 canonical／sitemap。兩者皆改為
+`https://eltha0122-ux.github.io/CCOM/`，與 `work/check_static_site.py` 在本分支的預設一致。
+
+同一組寫死網址在 `custom-domain` 分支上改為 `https://www.fanfanyeh.net/`（該分支的正式網址），
+比照 `check_static_site.py` 既有的分支慣例。兩邊各自改同一行會在合併時衝突，
+**DNS 當天合併 `custom-domain` 進 `main` 時，這兩個檔案取 `custom-domain` 側的值即可**。
+
+注意這兩支腳本本身仍標注「不要再執行」（會把 Weebly 相依裝回去），此處只是修正其預設值。

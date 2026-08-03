@@ -40,5 +40,5 @@ touch docs/.nojekyll
 # is still available.
 python3 work/repair_static_site.py \
   --docs "$target_dir" \
-  --base-url "https://jesuswaytaipeisrv.github.io/yeh/" \
+  --base-url "https://eltha0122-ux.github.io/CCOM/" \
   --download-images
