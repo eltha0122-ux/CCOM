@@ -320,3 +320,65 @@ DNS 未指向 GitHub Pages 時新舊網址會同時無法連線。
 - 敏感字串掃描（token、私鑰、api key 樣式）無命中。
 - 工作目錄仍有 18 個未追蹤檔案，是這個 Codex 工作目錄原本就混入的 Next.js 樣板
   （`app/`、`drizzle/`、`package.json` 等），與本站無關、未曾納入版控，故保留不動。
+
+## 2026-08-03：停用原建置位置的公開複本（`jesuswaytaipeisrv/yeh` 改為 private）
+
+正式站已移至 `eltha0122-ux/CCOM`，但原建置位置的 GitHub Pages 仍在
+`https://jesuswaytaipeisrv.github.io/yeh/` 放送一份完全相同的公開複本。本次將該 repo 改為 **private**，
+Pages 隨之停用，公開複本消失。**repo 未刪除**，理由與後續步驟見 `HANDOVER.md`。
+
+### 動手前的查證（結論：內容上刪除亦零損失）
+
+| 檢查 | 結果 |
+|---|---|
+| `git diff origin/main yeh/main` | 空，兩邊同為 `d705cf7` |
+| `git diff origin/custom-domain yeh/custom-domain` | 空，兩邊同為 `a95955c` |
+| 兩邊 `git ls-remote` 全部 refs | 完全一致，無僅存於舊 repo 的分支或 tag |
+| 舊 repo 的 issues／PR／releases／forks／stars | 全部為 0 |
+| 兩邊線上站台 | 皆 HTTP 200，回應大小同為 60859 bytes |
+
+### 執行方式
+
+本機未安裝 `gh` CLI，但 Keychain 內的 PAT 具 `repo` scope，可直接呼叫 API 改 visibility。
+token 以 `git credential fill` 取入 shell 變數，不寫入指令列或 log：
+
+```bash
+TOKEN=$(printf 'protocol=https\nhost=github.com\n\n' | git credential fill | sed -n 's/^password=//p')
+curl -s -X PATCH -H "Authorization: Bearer $TOKEN" \
+  https://api.github.com/repos/jesuswaytaipeisrv/yeh -d '{"private":true}'
+```
+
+該 PAT **沒有 `delete_repo` scope**，因此第 7 步真要刪除時仍須由擁有者在網頁的 Danger Zone 操作。
+
+### 驗證結果
+
+| 項目 | 結果 |
+|---|---|
+| API 回應 | `private: true`、`visibility: private` |
+| 匿名 `GET /repos/jesuswaytaipeisrv/yeh` | **404**（外部已不可見） |
+| `GET /repos/jesuswaytaipeisrv/yeh/pages`（已認證） | **404** → Pages 設定已移除 |
+| 舊站內頁 `.../yeh/about.html` | **404** |
+| 舊站首頁 | 仍回 200，但標頭 `age: 451`／`cache-control: max-age=600` → 純 CDN 快取殘留 |
+| 以 PAT 讀寫舊 repo（`git ls-remote`） | 正常，備份仍可存取 |
+| `https://eltha0122-ux.github.io/CCOM/` | HTTP 200、60859 bytes，**不受影響** |
+
+> **驗證陷阱**：改為 private 後舊站首頁短時間內仍會回 200，那是 Fastly 快取而非 Pages 還活著。
+> 判斷 Pages 是否真的停用要看 `GET /repos/.../pages` 是否 404 ＋ 任一內頁是否 404，
+> 只看首頁狀態碼會誤判。
+
+### 本機 remote 調整
+
+`origin` 原先指向舊 repo，改為指向正式的 `CCOM`，避免日後誤推到已封存的 repo：
+
+| remote | 指向 |
+|---|---|
+| `origin` | `https://github.com/eltha0122-ux/CCOM.git` |
+| `archive-jesuswaytaipeisrv` | `https://github.com/jesuswaytaipeisrv/yeh.git` |
+
+`main` 與 `custom-domain` 的 upstream 皆已改指新的 `origin`。
+
+### 尚未處理（已知，非本次範圍）
+
+`work/repair_static_site.py` 的 `DEFAULT_BASE_URL` 與 `work/prepare-static-site.sh` 內仍寫死
+`https://jesuswaytaipeisrv.github.io/yeh/`，該網址現已失效。兩者本來就標注「不要再執行」
+（會把 Weebly 相依裝回去），故本次未改動；若日後要重跑務必以 `--base-url` 指定正確網址。

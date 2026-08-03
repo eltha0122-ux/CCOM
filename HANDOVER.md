@@ -12,7 +12,7 @@
 | 站台內容 | 44 個 HTML、107 張圖，已完全脫離 Weebly |
 | 新家 | `https://github.com/eltha0122-ux/CCOM`（葉如凡本人帳號，public） |
 | 新網址 | **`https://eltha0122-ux.github.io/CCOM/` 已上線**（2026-08-02 部署成功並驗證） |
-| 原建置位置 | `https://github.com/jesuswaytaipeisrv/yeh`（保留為備份，不再是正式站） |
+| 原建置位置 | `https://github.com/jesuswaytaipeisrv/yeh`：2026-08-03 起改為 **private**，其 GitHub Pages 已隨之停用，`jesuswaytaipeisrv.github.io/yeh/` 不再對外。repo 本身保留為備份，待移轉完成後刪除 |
 | 網域 | `fanfanyeh.net` 仍指向 Weebly，**尚未變更** |
 | 離線備份 | `yeh-網站移轉包.zip`（232 檔，與 repo 內容相同） |
 
@@ -43,6 +43,21 @@
   - **她確認「內容都在」之後，才可以進行第 5 步**
 - [ ] **5. 改 DNS**（需登入 Register.com，帳號在她本人手上）
 - [ ] **6. 停掉 Weebly 訂閱**（確認新站在自訂網域上正常運作數日後再停）
+- [ ] **7. 刪除原建置位置的備份 repo**（`jesuswaytaipeisrv/yeh`，見下）
+
+### 原建置位置的處置（2026-08-03）
+
+站台原先建在 `jesuswaytaipeisrv/yeh`，其 GitHub Pages 會在
+`https://jesuswaytaipeisrv.github.io/yeh/` 放送一份**完全相同的公開複本**。
+正式站既已移到 `CCOM`，該複本沒有存在必要，已將 repo 改為 **private**——
+免費帳號的 private repo 不能開 Pages，Pages 因此自動停用，公開複本消失。
+
+**刻意先 private 而不直接刪除**：協助者在 `CCOM` 只有 collaborator **write、不是 admin**，
+若 `CCOM` 發生誤刪或權限變動，這是 GitHub 上唯一還受控的完整副本。
+待第 6 步（停 Weebly）觀察無誤後再刪，即上方第 7 步。
+
+刪除前已確認內容零損失：兩邊 `main` 同為 `d705cf7`、`custom-domain` 同為 `a95955c`，
+`git ls-remote` 的 refs 完全一致，舊 repo 的 issues／PR／releases／forks 全部為 0。
 
 ### 時程（2026-08-02 確認：Weebly 預計 8 月底停用）
 

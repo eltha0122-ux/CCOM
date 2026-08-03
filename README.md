@@ -58,7 +58,7 @@ python3 -m http.server 8000 --directory docs
 ```bash
 python3 work/repair_static_site.py \
   --docs docs \
-  --base-url https://jesuswaytaipeisrv.github.io/yeh/ \
+  --base-url https://eltha0122-ux.github.io/CCOM/ \
   --download-images
 ```
 
@@ -82,7 +82,8 @@ git diff --check
 - GitHub 儲存庫：<https://github.com/eltha0122-ux/CCOM>
 - Sitemap：<https://eltha0122-ux.github.io/CCOM/sitemap.xml>
 
-移轉自 <https://github.com/jesuswaytaipeisrv/yeh>（原建置位置，保留為備份）。
+移轉自 <https://github.com/jesuswaytaipeisrv/yeh>（原建置位置）。該 repo 已於 2026-08-03 改為 private、
+其 GitHub Pages 隨之停用，僅保留為備份，待移轉完成後刪除；詳見 `HANDOVER.md`。
 移交步驟與待辦見 `HANDOVER.md`。
 
 ## 自訂網域
