@@ -73,6 +73,16 @@ git diff --check
 `check_static_site.py` 預設檢查的正式網址是 `https://eltha0122-ux.github.io/CCOM/`，
 換網域後用 `--base-url https://新網址` 覆蓋（或直接改檔內的 `DEFAULT_BASE_URL`）。
 
+## 新增文章（不用碰 HTML）
+
+在 `articles/` 放一個 `.md` 檔（格式見 `articles/README.md` 與 `_範例` 檔），push 到 `main` 後
+GitHub Actions 會執行 `tools/build_articles.py`：產生 `docs/insight/<檔名>.html`、重建
+`docs/insight.html` 列表（新文章＋仍存在的舊文章，依日期排序）、更新 `sitemap.xml`。
+新頁面沒有留言、RSS 與臉書外掛，並帶有 JSON-LD（BlogPosting / Person）。
+舊 Weebly 文章要下架時直接刪 `docs/insight/` 裡對應的 .html 即可，列表會自動更新。
+
+本機建置：`pip install markdown && python3 tools/build_articles.py`（`--check` 只驗格式）。
+
 ## 部署
 
 推送到 GitHub 的 `main` 分支後，GitHub Actions 會自動將 `docs/` 發佈到 GitHub Pages。
