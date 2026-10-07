@@ -10,7 +10,7 @@ from urllib.parse import unquote, urlparse
 
 
 # 站台目前的正式網址。換站或換網域時用 --base-url 覆蓋，或直接改這行。
-DEFAULT_BASE_URL = "https://eltha0122-ux.github.io/CCOM/"
+DEFAULT_BASE_URL = "https://fanfanyeh.net/"
 ATTRIBUTE_RE = re.compile(r'(?:src|href)=["\']([^"\']+)', re.IGNORECASE)
 
 
@@ -79,7 +79,9 @@ def main() -> int:
             for tag in re.findall(
                 rf'<meta\s+property=["\']{re.escape(meta_name)}["\'][^>]+>', source, re.I
             ):
-                if "fanfanyeh.net" in tag or "editmysite.com" in tag:
+                # fanfanyeh.net 已是正式站；只有正式網址不是它時，才把它當舊站
+                legacy_host = "fanfanyeh.net" not in base_url and "fanfanyeh.net" in tag
+                if legacy_host or "editmysite.com" in tag:
                     errors.append(f"{relative}: {meta_name} 仍依賴舊站或 Weebly")
 
         for value in ATTRIBUTE_RE.findall(source):
