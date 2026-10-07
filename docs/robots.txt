@@ -1,4 +1,13 @@
 User-agent: *
 Allow: /
 
+# 可以被搜尋與引用，但不同意內容被用於訓練 AI 模型。
+# 這兩個是 Google / Apple 的「AI 訓練」開關，不影響 Google 搜尋與 Apple 搜尋的收錄。
+# （其他訓練爬蟲如 GPTBot、ClaudeBot、CCBot 由 Cloudflare AI Crawl Control 直接封鎖。）
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: Applebot-Extended
+Disallow: /
+
 Sitemap: https://fanfanyeh.net/sitemap.xml

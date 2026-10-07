@@ -281,7 +281,13 @@ def write_sitemap(docs: Path, base_url: str) -> int:
     lines.append("</urlset>")
     (docs / "sitemap.xml").write_text("\n".join(lines) + "\n", encoding="utf-8")
     (docs / "robots.txt").write_text(
-        "User-agent: *\nAllow: /\n\n" f"Sitemap: {base_url}sitemap.xml\n",
+        "User-agent: *\nAllow: /\n\n"
+        "# 可以被搜尋與引用，但不同意內容被用於訓練 AI 模型。\n"
+        "# 這兩個是 Google / Apple 的「AI 訓練」開關，不影響 Google 搜尋與 Apple 搜尋的收錄。\n"
+        "# （其他訓練爬蟲如 GPTBot、ClaudeBot、CCBot 由 Cloudflare AI Crawl Control 直接封鎖。）\n"
+        "User-agent: Google-Extended\nDisallow: /\n\n"
+        "User-agent: Applebot-Extended\nDisallow: /\n\n"
+        f"Sitemap: {base_url}sitemap.xml\n",
         encoding="utf-8",
     )
     return len(urls)
