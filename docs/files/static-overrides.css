@@ -121,3 +121,20 @@
     width: 100%;
   }
 }
+
+/* ===================================================================
+   頁首 logo「葉如凡｜企業溝通治理顧問」上緣被裁切
+   主題把 #wsite-title 設成 line-height: 1（20px），外層 .logo 與 .wsite-logo
+   又都是 overflow: hidden。macOS 的中文字形最高點在基準線上方約 17.2px，
+   但 20px 行框在基準線上方只有 15px，字頂約 2.2px 被切掉。
+   另外在 1025–1150px 左右寬度時標題會折成兩行。
+   =================================================================== */
+.unite-header .logo #wsite-title {
+  line-height: 1.5 !important;
+  padding: 2px 0;
+  white-space: nowrap;
+}
+.unite-header .logo,
+.unite-header .logo .wsite-logo {
+  overflow: visible;
+}
