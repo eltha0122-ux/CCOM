@@ -217,7 +217,9 @@ ARTICLE_CSS = """
 .article-body h3{font-size:19px;font-weight:600;margin:1.5em 0 .5em}
 .article-body ul,.article-body ol{margin:0 0 1.2em 1.6em}
 .article-body li{margin:.3em 0}
-.article-body blockquote{border-left:3px solid #c9c9c9;margin:1.2em 0;padding:.2em 1.2em;color:#555}
+.article-body blockquote{border-left:3px solid #c9c9c9;margin:1.2em 0;padding:.6em 1.2em;color:#555;background:rgba(225,228,230,.5);font-family:inherit;font-size:inherit;line-height:inherit}
+.article-body blockquote::before{content:none;display:none}
+.article-body blockquote p:last-child{margin-bottom:0}
 .article-body img{max-width:100%;height:auto;display:block;margin:1.2em auto}
 .article-body hr{border:0;border-top:1px solid #ddd;margin:2em 0}
 .article-body a{text-decoration:underline}
@@ -225,6 +227,11 @@ ARTICLE_CSS = """
 .article-hero img{max-width:100%;height:auto;display:block}
 .article-author{border-top:1px solid #e5e5e5;margin-top:48px;padding-top:24px;color:#444;font-size:15px;line-height:1.8}
 .article-author strong{font-size:16px;color:#222}
+.article-author .author-actions{margin:16px 0 0;display:flex;flex-wrap:wrap;gap:10px}
+.article-author a.author-btn{display:inline-block;padding:9px 18px;border:1px solid #8a6a3b;border-radius:4px;color:#8a6a3b;font-weight:600;font-size:15px;line-height:1.4;text-decoration:none;opacity:1;transition:background .15s,color .15s}
+.article-author a.author-btn:hover,.article-author a.author-btn:focus{background:#8a6a3b;color:#fff}
+.article-author a.author-btn-primary{background:#8a6a3b;color:#fff}
+.article-author a.author-btn-primary:hover,.article-author a.author-btn-primary:focus{background:#6f5530;border-color:#6f5530}
 .article-nav{margin:32px 0 0;font-size:15px}
 .insight-list .blog-post{margin-bottom:44px}
 .insight-list .blog-post h2.blog-title{text-transform:none;line-height:1.35}
@@ -299,7 +306,10 @@ def render_article(a: Article, base: str, shell: str) -> str:
   <div class="article-author">
     <strong>{esc(AUTHOR)}｜{esc(AUTHOR_TITLE)}</strong><br />
     以 CCOS 企業溝通營運系統協助企業建立可持續運作的內部溝通治理架構。
-    <a href="../{AUTHOR_PAGE}">關於如凡</a>　·　<a href="../{INQUIRY_PAGE}">洽詢課程與顧問服務</a>
+    <p class="author-actions">
+      <a class="author-btn author-btn-primary" href="../{INQUIRY_PAGE}">洽詢課程與顧問服務 →</a>
+      <a class="author-btn" href="../{AUTHOR_PAGE}">關於如凡 →</a>
+    </p>
   </div>
   <p class="article-nav"><a href="../insight.html">← 回到洞察 Insight 文章列表</a></p>
 </article>"""
