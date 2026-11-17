@@ -98,8 +98,8 @@ def main() -> int:
         errors.append("缺少 sitemap.xml")
     else:
         sitemap_source = sitemap.read_text(encoding="utf-8")
-        if sitemap_source.count("<url>") != 25:
-            errors.append("sitemap.xml 應包含 25 個正式網址")
+        if sitemap_source.count("<url>") != 26:
+            errors.append("sitemap.xml 應包含 26 個正式網址")
         if base_url not in sitemap_source:
             errors.append("sitemap.xml 未使用目前 GitHub Pages 正式網址")
 
@@ -115,7 +115,7 @@ def main() -> int:
 
     print(
         "static validation passed: "
-        f"primary_pages={len(primary_pages)}, redirects={len(redirects)}, sitemap_urls=25"
+        f"primary_pages={len(primary_pages)}, redirects={len(redirects)}, sitemap_urls=26"
     )
     return 0
 

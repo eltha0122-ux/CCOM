@@ -371,7 +371,8 @@ def update_sitemap(base: str, items: list[Article]) -> int:
         target = DOCS / (rel or "index.html")
         if target.is_dir():
             target = target / "index.html"
-        if target.exists():
+        # 無副檔名網址（例如 /communication-governance）由 GitHub Pages 對應到同名 .html
+        if target.exists() or (not target.suffix and target.with_suffix(".html").exists()):
             keep.append(loc)
     for a in items:
         u = f"{base}/{a.rel_path}"

@@ -138,3 +138,27 @@
 .unite-header .logo .wsite-logo {
   overflow: visible;
 }
+
+
+/* ===================================================================
+   主選單：2026-11 新增「溝通治理方法論」後共 7 項，
+   原本 50% 寬、左右各 20px 留白會在大螢幕折成兩行。
+   1280px 以上放寬選單欄、縮小項目間距，讓 7 項維持一行（靠右對齊）。
+   =================================================================== */
+@media screen and (min-width: 1280px) {
+  /* 右側會員登入欄位本站沒有使用，原本佔 25% 寬，讓出給選單 */
+  .unite-header .membership-cart {
+    width: 0;
+    padding: 0;
+  }
+
+  .unite-header .desktop-nav {
+    width: 75%;
+    text-align: right;
+  }
+
+  .unite-header .desktop-nav .wsite-menu-item {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
